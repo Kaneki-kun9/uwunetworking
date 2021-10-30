@@ -2,7 +2,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 int tap_alloc(char *dev);
 
-int tap_read(uint8_t *buf, size_t buf_size);
+ssize_t tap_read(int fd, uint8_t *buf, size_t buf_size);

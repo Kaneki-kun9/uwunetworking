@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "common.h"
@@ -18,8 +19,8 @@ int tap_alloc(char *dev) {
     struct ifreq ifr;
     int fd, err;
 
-    if ((fd = open("/dev/net/tap", O_RDWR)) < 0) {
-        panic("Cannot open TAP dev");
+    if ((fd = open("/dev/net/tun", O_RDWR)) < 0) {
+        panicf("tap_alloc(): Cannot open TAP dev: %s", strerror(errno));
     }
 
     memset(&ifr, 0, sizeof(ifr));
@@ -28,12 +29,12 @@ int tap_alloc(char *dev) {
     strncpy(ifr.ifr_name, dev, IFNAMSIZ);
 
     if ((err = ioctl(fd, TUNSETIFF, (void *)&ifr)) < 0) {
-        panicf("ERR: Could not ioctl tun %s", strerror(errno));
+        panicf("tap_alloc(): Could not ioctl tun %s", strerror(errno));
         close(fd);
     }
 
-    strncpy(dev, ifr.ifr_name, IFNAMSIZ);
+    // strncpy(dev, ifr.ifr_name, IFNAMSIZ);
     return fd;
 }
 
-int tap_read(uint8_t *buf, size_t buf_size) { return -1; }
+ssize_t tap_read(int fd, uint8_t *buf, size_t buf_size) { return read(fd, buf, buf_size); }
