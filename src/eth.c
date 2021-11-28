@@ -5,15 +5,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "arp.h"
 #include "common.h"
 #include "tap.h"
-
-struct eth_hdr {
-    uint8_t dmac[6];
-    uint8_t smac[6];
-    uint16_t ethertype;
-    uint8_t payload[];
-} __attribute__((packed));
 
 void eth_in(int tap_fd, uint8_t *buf) {
     size_t idx = 0;
@@ -23,7 +17,8 @@ void eth_in(int tap_fd, uint8_t *buf) {
         if (c < 0) {
             panicf("eth_in():Read from tun_fd: %s\n");
         } else {
-            idx += c;
+            const size_t c_size = (size_t)c;
+            idx += c_size;
         }
     }
 
@@ -33,8 +28,13 @@ void eth_in(int tap_fd, uint8_t *buf) {
         panic("eth_in(): Ethernet Frame exceeds limit");
     }
 
-    printf("%p", buf);
+    printf("%p\n", buf);
 
+    struct arp_hdr *arp_hdr = (struct arp_hdr *)hdr->payload;
+
+    if (arp_hdr->opcode == 1) {
+        // arp_incoming(hdr);
+    }
     // TODO: Handling of Frames
     // Stop after reading all data the header told us to expect, even if it's < MTU
 }
