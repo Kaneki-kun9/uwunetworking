@@ -20,7 +20,7 @@ int tap_alloc(char *dev) {
     int fd, err;
 
     if ((fd = open("/dev/net/tun", O_RDWR)) < 0) {
-        panicf("tap_alloc(): Cannot open TAP dev: %s", strerror(errno));
+        panicf("tap_alloc(): Cannot open TAP dev: %s \n", strerror(errno));
     }
 
     memset(&ifr, 0, sizeof(ifr));
@@ -29,12 +29,17 @@ int tap_alloc(char *dev) {
     strncpy(ifr.ifr_name, dev, IFNAMSIZ);
 
     if ((err = ioctl(fd, TUNSETIFF, (void *)&ifr)) < 0) {
-        panicf("tap_alloc(): Could not ioctl tun %s", strerror(errno));
+        panicf("tap_alloc(): Could not ioctl tun %s \n", strerror(errno));
         close(fd);
     }
 
-    // strncpy(dev, ifr.ifr_name, IFNAMSIZ);
+    strncpy(ifr.ifr_name, dev, IFNAMSIZ);
     return fd;
 }
 
-ssize_t tap_read(int fd, uint8_t *buf, size_t buf_size) { return read(fd, buf, buf_size); }
+ssize_t tap_read(int fd, uint8_t *buf, size_t buf_size) {
+    printf("UWU\n");
+    ssize_t c = read(fd, buf, buf_size);
+    printf("C: %li \n", c);
+    return c;
+}

@@ -12,7 +12,7 @@ project(
   DESCRIPTION
     "Reimplementing a Networkstack"
   LANGUAGES C)
-add_executable(${PROJECT_NAME} "src/main.c" "src/tap.c" "src/eth.c" "src/common.c")
+add_executable(${PROJECT_NAME} "src/main.c" "src/tap.c" "src/eth.c" "src/common.c" "src/arp.c")
 
 target_compile_features(${PROJECT_NAME} PRIVATE c_std_11)
 # TODO: Fix for clang/MSVC
