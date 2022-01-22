@@ -25,6 +25,7 @@ void eth_in(int tap_fd, uint8_t *buf) {
             idx += c_size;
         }
     }
+
     struct eth_hdr *hdr = (struct eth_hdr *)buf;
 
     printf("ethertype: %i\n", hdr->ethertype);
@@ -38,11 +39,8 @@ void eth_in(int tap_fd, uint8_t *buf) {
             break;
     }
 
-    struct arp_hdr *arp_hdr = (struct arp_hdr *)hdr->payload;
+    // struct arp_hdr *arp_hdr = (struct arp_hdr *)hdr->payload;
 
-    if (arp_hdr->opcode == 1) {
-        arp_incoming(hdr);
-    }
     // TODO: Handling of Frames
     // Stop after reading all data the header told us to expect, even if it's < MTU
 }

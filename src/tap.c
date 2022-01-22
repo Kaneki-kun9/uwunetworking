@@ -38,8 +38,6 @@ int tap_alloc(char *dev) {
 }
 
 ssize_t tap_read(int fd, uint8_t *buf, size_t buf_size) {
-    printf("UWU\n");
     ssize_t c = read(fd, buf, buf_size);
-    printf("C: %li \n", c);
     return c;
 }
